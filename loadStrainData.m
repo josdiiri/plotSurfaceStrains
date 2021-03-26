@@ -1,12 +1,17 @@
 function [StrainOutput, modelData] = loadStrainData
 
+% This function is used to read and process the strain data from the RPT
+% files.
+
 %% load the 3D MODEL
-modelData = load('model_Human') ; % loaded as modelData
+[fName1,path1] = uigetfile('*.mat','Select the file with the 3D models') ;
+modelData = load(fullfile(path1,fName1)) ; % loaded as modelData
 
 %% Select the STRAIN data
 
 % Here you should select all the models that you want to compare
-[Files,pathName] = uigetfile('*.rpt','multiselect','on') ;
+[Files,pathName] = uigetfile('*.rpt','Select the strain file(s)',...
+    'multiselect','on') ;
 
 % prepare the output files
 Labels = {'File';'Nodes';'Strains'} ;

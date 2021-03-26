@@ -1,6 +1,10 @@
 function [selectedNodes,selectedStrainData] = matchModelStrainNodes(model, ...
     nodeData, strainData)
 
+% The 3D model mighht not have exactly the same amount of vertices as the
+% model used for the strain anaylsis. This code finds the strain nodes or
+% vertices that most closely match the position of the 3D model nodes.
+
 % XYZ position of the nodes of the 3D model
 modelXYZ = model.Points ;
 

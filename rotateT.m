@@ -12,6 +12,7 @@ function rotData = rotateT(data,T)
 %                   the markers
 
 % get the number of transformation matrices
+
 if size(T,3)>1
     nTranforms = size(T,3) ;
     fT = T ;

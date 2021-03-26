@@ -24,6 +24,7 @@ function [PSmagnitude,PSdirection,rotS] = PrincStrains (S,Rm)
 % Note that this uses the strain transformation method of Ameen: i.e.,
 % the shear strains are divided by 2.
 
+
 nStrains = size(S,1) ;
 PSmagnitude = nan(nStrains,3) ;
 PSdirection = nan(nStrains,9) ;

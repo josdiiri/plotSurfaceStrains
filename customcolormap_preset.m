@@ -1,4 +1,4 @@
-% Helper function with presets.
+% Helper function with presets.%
 function J = customcolormap_preset(preset_name)
 
     switch(preset_name)

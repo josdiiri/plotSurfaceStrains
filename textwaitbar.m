@@ -10,7 +10,7 @@ function textwaitbar(i, n, msg)
 % Date      : 05/23/2019
 % Author    : Xiaoxuan He   <hexxx937@umn.edu>
 % Institute : University of Minnesota
-%
+
 
 % Previous percentage number.
 persistent i_prev_prct;

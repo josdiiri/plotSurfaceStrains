@@ -1,6 +1,10 @@
 function plotSurfaceStrains(boneModel, plateModels, rotationMatrix, strains,...
     cAxes, ColorMap, labels,viewPos)
 
+% This code takes the strain information, either from an individual loading
+% model, or from the comparison between models, and plots the strains on
+% the 3D model.
+
 if ~isobject(boneModel.Mand)
     boneModel.Mand  = triangulation(boneModel.Mand.faces,...
         boneModel.Mand.vertices) ;

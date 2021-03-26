@@ -1,6 +1,6 @@
 function makeHeadlight
 
-% adds a front light to all images in the current figure
+% Thsi functionadds a front light to all images in the current figure
 
 h = get(gcf,'children') ;
 hAxis = findobj(h,'type','Axes') ;

@@ -1,5 +1,6 @@
 function [isRight,newCS] = isRightHandedCS(CS)
-
+% This code makes sure that a coordinate system is a right-handed
+% coordinate system. 
 % Each row represents an axis
 
 newCS = CS ;

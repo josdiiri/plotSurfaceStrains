@@ -1,6 +1,8 @@
 function [NodesXYZ,NodesID,Strain,BricksNodesID,NodesLabels,StrainLabels] = ...
     readRPTfiles(PathFile)
 
+% Function that reads the RPT files 
+
 % open the formatted text
 fid = fopen(fullfile(PathFile),'r') ;
 

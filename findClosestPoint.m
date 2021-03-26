@@ -1,4 +1,5 @@
 function [index, minDist] = findClosestPoint(coord, points, doWaitbar)
+
 %FINDCLOSESTPOINT Find index of closest point in an array.
 %
 %   INDEX = findClosestPoint(POINT, POINTARRAY)

@@ -1,3 +1,4 @@
+
 % ----------------------------------------------------------------------- %
 % FUNCTION "customcolormap" defines a customized colobar given the        %
 % positions and the colors that are going to generate the gradients.      %

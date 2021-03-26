@@ -35,7 +35,7 @@ function cmap = colormap_signed(n,zero_loc)
 % use this function to return a symmetrical signed colormap (i.e., zero_loc 
 % = 0.5) and then manually set the colorbar properties to crop the colorbar.
 
-% Written by Peter Hammer, April 2015 and posted on Matlab File Exchange
+% Written by Peter Hammer, April 2015
 
 switch nargin
     case 2

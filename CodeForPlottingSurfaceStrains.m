@@ -1,11 +1,22 @@
-%% get the strain data from RPT files -----------------------------------%%
+%% Get the strain data from RPT------------------------------------------%%
+% to get the data from the RPT file, run the code below
 [strainData, modelData] = loadStrainData ;
 
+%% Get the previously save model and strain data
+% to load previously saved data, run the code below
+[fName1,path1] = uigetfile('*.mat','Select the strain file') ;
+load(fullfile(path1,fName1))
+
+[fName2,path2] = uigetfile('*.mat','Select the 3D model file') ;
+load(fullfile(path2,fName2))
 
 %% Plot the surface strains for individual models -----------------------%%
+clc
+disp(' ')
+disp('***Plotting strains from individual models***')
 
 % USER PARAMETERS ---------------------------------------------------------
-% Enter the limits for colormaps
+% Enter the limits for colormaps (in microstrains)
 maxValueDirectStrains    = 600 ;
 maxValuePrincipalStrains = 600 ;
 maxValueRatio            = 150 ;
@@ -19,12 +30,12 @@ boneModels.Teeth = modelData.Teeth ;
 % rotation matrix to align the model for plotting
 
 % if using human model uncomment the following line
-% rotationMatrix = [0 0 -1; 0 1 0; 1 0 0]; 
+rotationMatrix = [0 0 -1; 0 1 0; 1 0 0]; 
 
 % if using the macaque model, uncomment the following lines
-rotationMatrix = [-0.9958   -0.0382   -0.0828
-                   0.0731   -0.8770   -0.4749
-                  -0.0545   -0.4790    0.8761] ;
+% rotationMatrix = [-0.9958   -0.0382   -0.0828
+%                    0.0731   -0.8770   -0.4749
+%                   -0.0545   -0.4790    0.8761] ;
 
 %--------------------------------------------------------------------------
 
@@ -63,7 +74,7 @@ strainLabels = {'\epsilon_{1}','|\epsilon_{3}|','|\epsilon_{1}/\epsilon_{3}|',..
     '\epsilon_{xx}','\epsilon_{yy}','\epsilon_{zz}',...
     '\epsilon_{xy}','\epsilon_{xz}','\epsilon_{yz}'} ;
 
-for i = 1%:nStrainModels
+for i = 1:nStrainModels
     disp(['--> Plotting figure ' num2str(i) ' of ' num2str(nStrainModels)])
     
     % Strain labels
@@ -98,8 +109,12 @@ end
 
 %% Plot differences between strain models
 
+clc
+disp(' ')
+disp('***Plotting strains from comparisons between models***')
+
 % USER PARAMETERS ---------------------------------------------------------
-% Enter the limits for colormaps
+% Enter the limits for colormaps (in microstrains)
 maxValue    = 400 ;
 
 % END USER PARAMETERS -----------------------------------------------------
