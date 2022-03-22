@@ -91,7 +91,7 @@ for i = 1:nStrainModels
     end
     
     % get the strain data of the specific treatment
-    strains = strainData{3,i+1} ;
+    strains    = strainData{3,i+1} ;
     psData     = strains.PSmag ; % principal strain magnitudes
     directData = strains.directStrain ; % direct strain 
     
@@ -161,16 +161,16 @@ for i = 1:nComparisons
     cIdx = Comparisons(i,:) ; 
     
     % get the labels of the comparisons
-    figureName = [strainData{1,cIdx(1)} ' - ' strainData{1,cIdx(2)}] ;
+    figureName = [strainData{1,cIdx(2} ' - ' strainData{1,cIdx(1)}] ;
     
     % get the data of the specific comparisons
     data1 = strainData{3,cIdx(1)} ;
     data2 = strainData{3,cIdx(2)} ;
     
     % process the data
-    dDirectStrain = data1.directStrain - data2.directStrain ;
-    dPS           = abs(data1.PSmag)   - abs(data2.PSmag) ;
-    data2plot = [dDirectStrain dPS] ;
+    dDirectStrain = data2.directStrain - data1.directStrain ;
+    dPS           = abs(data2.PSmag)   - abs(data1.PSmag) ;
+    data2plot = [dPS dDirectStrain] ;
     data2plot = data2plot(:,vars2plot) ;
     
     % plot the differences between models
