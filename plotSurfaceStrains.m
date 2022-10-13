@@ -1,5 +1,5 @@
 function plotSurfaceStrains(boneModel, plateModels, rotationMatrix, strains,...
-    cAxes, ColorMap, labels,viewPos)
+    cAxes, ColorMap, labels, viewPos)
 
 % This code takes the strain information, either from an individual loading
 % model, or from the comparison between models, and plots the strains on
