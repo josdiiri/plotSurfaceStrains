@@ -1,4 +1,4 @@
-function [StrainOutput, modelData] = loadStrainData_RSOS
+function [StrainOutput, modelData] = loadStrainData
 
 % This function is used to read and process the strain data from the RPT
 % files.
