@@ -1,6 +1,9 @@
 %% Get the strain data from RPT------------------------------------------%%
 % to get the data from the RPT file, run the code below
-[strainData, modelData] = loadStrainData ;
+[strainData, modelData] = loadStrainData_RSOS ;
+
+[~,nameAppend] = fileparts(cd) ;
+save(['Strains_' nameAppend '.mat'],'strainData')
 
 %% Get the previously save model and strain data
 % to load previously saved data, run the code below
@@ -8,10 +11,11 @@
 load(fullfile(path1,fName1))
 
 [fName2,path2] = uigetfile('*.mat','Select the 3D model file') ;
-load(fullfile(path2,fName2))
+modelData = load(fullfile(path2,fName2)) ;
 
 %% Plot the surface strains for individual models -----------------------%%
 clc
+close all
 disp(' ')
 disp('***Plotting strains from individual models***')
 
@@ -24,8 +28,8 @@ maxValueRatio            = 150 ;
 
 
 % Prepare the mandible and teeth 3D models --------------------------------
-boneModels.Mand  = modelData.Mand ;
-boneModels.Teeth = modelData.Teeth ;
+boneModels.Mandible = modelData.Mandible ;
+boneModels.Teeth    = modelData.Teeth ;
 
 % rotation matrix to align the model for plotting
 
@@ -62,8 +66,13 @@ ColorMapsAxes = [cmLimsPS; cmLimsPS; cmLimsRatio; ...
 
 
 % Define the views of the plots -------------------------------------------
-views = [-180 0; 0 0; -90 0; 90 0] ;
+views = [-180 0; 0 0; -90 0; 90 0] ; % for human data
 % frontal view, posterior view, left view, right view
+%--------------------------------------------------------------------------
+
+% Define the views of the plots -------------------------------------------
+labelPos = [1 0.5 0.2]  ; % for human data
+
 %--------------------------------------------------------------------------
 
 
@@ -92,8 +101,8 @@ for i = 1:nStrainModels
     
     % get the strain data of the specific treatment
     strains    = strainData{3,i+1} ;
-    psData     = strains.PSmag ; % principal strain magnitudes
-    directData = strains.directStrain ; % direct strain 
+    psData     = strains.PSmagnitude ; % principal strain magnitudes
+    directData = strains.Strain ; % direct strain 
     
     % process the strain magnitudes for plotting
     absPS = abs(psData(:,[1 3])) ; % absolute PS1 and PS3
@@ -103,13 +112,16 @@ for i = 1:nStrainModels
     data2plot = [absPS PSratio directData] ;
     
     % plot the surface strains
-    plotSurfaceStrains(boneModels,plateModels,...
-        rotationMatrix,data2plot,ColorMapsAxes,ColorMaps,strainLabels, views)
+    plotSurfaceStrains(boneModels,plateModels,data2plot,...
+        rotationMatrix,ColorMapsAxes,ColorMaps,strainLabels,views,labelPos)
+    
+    exportgraphics(gcf,[strainModelLabel '.tif'],'resolution',300)
 end
 
 %% Plot differences between strain models
 
 clc
+close all
 disp(' ')
 disp('***Plotting strains from comparisons between models***')
 
@@ -126,7 +138,7 @@ maxValue    = 400 ;
 % each pair of values corresponds to a single comparison
 % e.g. Comparisons = [1 2; 3 4] ;
 
-Comparisons = [2 6; 4 6; 3 7; 5 7; 4 2; 2 4; 5 3] ;
+Comparisons = [2 6; 4 6; 3 7; 5 7; 4 2; 5 3] ;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Select the parameters to plot
@@ -144,10 +156,12 @@ ColorMaps = repmat({cm},nVars,1) ;
 views = [-180 0; 0 0; -90 0; 90 0] ;
 
 % Prepare the mandible and teeth 3D models --------------------------------
-boneModels.Mand  = modelData.Mand ;
-boneModels.Teeth = modelData.Teeth ;
+boneModels.Mandible = modelData.Mandible ;
+boneModels.Teeth    = modelData.Teeth ;
 rotationMatrix = [0 0 -1; 0 1 0; 1 0 0] ; % rotation matrix to align the model
 %--------------------------------------------------------------------------
+
+labelPos = [1 0.5 0.2]  ; % for human data
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Calculate the differences
@@ -161,19 +175,22 @@ for i = 1:nComparisons
     cIdx = Comparisons(i,:) ; 
     
     % get the labels of the comparisons
-    figureName = [strainData{1,cIdx(2} ' - ' strainData{1,cIdx(1)}] ;
+    figureName = [strainData{1,cIdx(1)} ' - ' strainData{1,cIdx(2)}] ;
     
     % get the data of the specific comparisons
     data1 = strainData{3,cIdx(1)} ;
     data2 = strainData{3,cIdx(2)} ;
     
     % process the data
-    dDirectStrain = data2.directStrain - data1.directStrain ;
-    dPS           = abs(data2.PSmag)   - abs(data1.PSmag) ;
+    dDirectStrain = data1.Strain - data2.Strain ;
+    dPS           = abs(data1.PSmagnitude)   - abs(data2.PSmagnitude) ;
     data2plot = [dPS dDirectStrain] ;
     data2plot = data2plot(:,vars2plot) ;
     
     % plot the differences between models
-    plotSurfaceStrains(boneModels,[],rotationMatrix,data2plot,colormapAxes,...
-        ColorMaps,labels,views)
+    plotSurfaceStrains(boneModels,[],data2plot,rotationMatrix,colormapAxes,...
+        ColorMaps,labels,views,labelPos)
+    
+    exportgraphics(gcf,[figureName '.tif'],'resolution',300)
+
 end
