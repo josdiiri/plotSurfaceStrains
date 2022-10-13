@@ -1,9 +1,12 @@
-function [StrainOutput, modelData] = loadStrainData
+function [StrainOutput, modelData] = loadStrainData_RSOS
 
 % This function is used to read and process the strain data from the RPT
 % files.
 
 %% load the 3D MODEL
+clc
+disp(' ')
+disp('-----> Loading the 3D models')
 [fName1,path1] = uigetfile('*.mat','Select the file with the 3D models') ;
 modelData = load(fullfile(path1,fName1)) ; % loaded as modelData
 
@@ -27,12 +30,12 @@ for i = 1:nFiles
     fileName = Files{i} ;
     
     disp(' ')
+    disp('****************************************************************')
     disp(['--> Processing file ' num2str(i) ' of ' num2str(nFiles)])
     disp(['File: "' fileName '"'])
     
     % read the RPT files and extract the data
-    [NodesXYZ,NodesID,strains,strainNodesID,NodesLabels] = ...
-        readRPTfiles(fullfile(pathName,fileName)) ;
+    [NodeData,StrainData] = readRPTfiles(fullfile(pathName,fileName)) ;
     % NodesXYZ is a n1*3 matrix of the XYZ position of the nodes of the model
     % NodesID is a n1*1 vector of the ID number of the nodes
     % strains is a n2*6 matrix of the direct strains
@@ -43,33 +46,26 @@ for i = 1:nFiles
     %           of the model
     
     correctionFactor = 1e6 ; % correction factor from strains to microstrains
-    strainData = table(strainNodesID,strains.*correctionFactor,...
-        'VariableNames',{'nodesID','directStrain'}) ;
-    
-    % initialize the output table
-    nodeData = table(NodesID,NodesLabels,NodesXYZ) ;
+    StrainData.Strain = StrainData.Strain.*correctionFactor ;
         
     % reduce the data so that we only work with the strain data of the
     % nodes that matches the nodes of the surface model
-    [redNodeData,redStrainData] = matchModelStrainNodes(modelData.Mand, ...
-        nodeData, strainData, 1) ;
+    [redNodeData,redStrainData] = matchModelStrainNodes(modelData.Mandible, ...
+        NodeData, StrainData) ;
 
     % calculate the principal strains
-    [PSmag,PSdir] = PrincStrains(redStrainData.directStrain, eye(3)) ;
+    [PSmag,PSdir] = PrincStrains(redStrainData.Strain, eye(3)) ;
+    redStrainData.PSmagnitude = PSmag ;
+    redStrainData.PSdirection = PSdir ;
     
     % Because there are multiple elements attached per node, we need to
     % calculate either the mean or the median so that we can have just one
     % point per node
     statistic = 'median' ;
-    averageStrain = averageStrainPerNode(redNodeData.NodesID,...
-        redStrainData.nodesID(:,1),...
-        [redStrainData.directStrain PSmag PSdir], statistic) ;
-    
-    % write the output table
-    outputTable = table(redNodeData.NodesID,averageStrain(:,1:6),averageStrain(:,7:9),...
-        averageStrain(:,10:18),'VariableNames',{'nodesID','directStrain','PSmag','PSdir'}) ;
+    averageStrain = averageStrainPerNode(redNodeData,redStrainData, statistic) ;
 
+    % Create output file
     StrainOutput(1,i+1) = {fileName(1:end-4)} ;
     StrainOutput(2,i+1) = {redNodeData} ;
-    StrainOutput(3,i+1) = {outputTable} ;
+    StrainOutput(3,i+1) = {averageStrain} ;
 end
