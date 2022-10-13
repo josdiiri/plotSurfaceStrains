@@ -5,6 +5,9 @@ function [selectedNodes,selectedStrainData] = matchModelStrainNodes(model, ...
 % model used for the strain anaylsis. This code finds the strain nodes or
 % vertices that most closely match the position of the 3D model nodes.
 
+disp(' ')
+disp('-----> Reducing the number of points to match the stl model')
+
 % XYZ position of the nodes of the 3D model
 modelXYZ = model.Points ;
 
@@ -16,5 +19,7 @@ idxT = findClosestPoint(modelXYZ,nodeData.NodesXYZ,1) ;
 selectedNodes = nodeData(idxT,:) ;
 
 % find the selected nodes in the strain data
-isSelectedNode = ismember(strainData.nodesID(:,1),selectedNodes.NodesID) ;
+isSelectedNode = ismember(strainData.NodesID(:,1),selectedNodes.NodesID) ;
 selectedStrainData = strainData(isSelectedNode,:) ;
+
+disp('... and Done! <------')
